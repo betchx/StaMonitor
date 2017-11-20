@@ -22,11 +22,12 @@ namespace StaMonitor
   public partial class MainWindow : Window
   {
     public double end_time { get; private set; }
-    //private StaWatcher sta_watcher;
     private FileInfo target;
+    private Stack<string> lines;
 
     public MainWindow() {
       InitializeComponent();
+      lines = new Stack<string>();
       var name = getTargetFileName();
       if(name != "") 
         target = new FileInfo(name);
@@ -61,35 +62,42 @@ namespace StaMonitor
 
     private async void button_Click(object sender, RoutedEventArgs e) {
       this.WindowState = WindowState.Minimized;
-      using (var sfw = new FileSystemWatcher(target.DirectoryName, target.Name)) {
-        sfw.NotifyFilter |= NotifyFilters.Size | NotifyFilters.LastWrite | NotifyFilters.FileName;
-        using (var s = target.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete)) {
-          using (var f = new StreamReader(s)) {
-            var text = f.ReadToEnd();
-            var lines = text.Split('\n');
-            var n = lines.Length;
-            var line = lines[n - 2] ?? lines[n - 3];
-            while (!(line ?? "COMPLETED").Contains("COMPLETED")) {
-              var arr = line.Split(null).Where((str) => str.Length > 0).ToArray();
-              if (arr.Count() > 1) {
-                var time = arr[6];
-                var delta = arr[8];
-                double time_value = 0.0;
-                double.TryParse(time, out time_value);
+
+      // Open with share control because the sta file was opened by abaqus process to write.
+      using (var s = target.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete)) {
+        using (var f = new StreamReader(s)) {
+          // Read and store all lines of sta file into the 'lines' stack.
+          string line = f.ReadLine();
+          do {
+            lines.Push(line);
+            line = f.ReadLine();
+          } while (!String.IsNullOrWhiteSpace(line));
+          line = lines.Peek();
+
+          // Main loop
+          while (!(line ?? "COMPLETED").Contains("COMPLETED")) {
+            var arr = line.Split(null).Where((str) => str.Length > 0).ToArray();
+            if (arr.Count() > 1) {
+              var time = arr[6];
+              var delta = arr[8];
+              double time_value = 0.0;
+              if (double.TryParse(time, out time_value)) {
                 var rate = 100.0 * double.Parse(time) / end_time;
                 Title = $"{time}/{end_time}({rate,4:0.0}%)[{delta}]";
               }
-
-              // Read Next line with waiting
-              line = await Task.Run(() => {
-                while (f.EndOfStream) {
-                  System.Threading.Thread.Sleep(100);
-                }
-                return f.ReadLine();
-              });
+              textBlock.Text = String.Join("\n", lines.Take(5).Reverse());
             }
-            Title = "Finished.";
+
+            // Read Next line with waiting
+            line = await Task.Run(() => {
+              while (f.EndOfStream) {
+                System.Threading.Thread.Sleep(100);
+              }
+              return f.ReadLine();
+            });
+            lines.Push(line);
           }
+          Title = "Finished.";
         }
       }
       this.WindowState = WindowState.Normal;
