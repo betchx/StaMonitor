@@ -1,0 +1,19 @@
+﻿      string[] args = Environment.GetCommandLineArgs();
+      string file;
+      if (args.Length == 1) {
+        var dlg = new Microsoft.Win32.OpenFileDialog();
+        dlg.CheckFileExists = true;
+        dlg.CheckPathExists = true;
+        dlg.Filter = "Sta file(*.sta)|*.sta";
+        dlg.Multiselect = false;
+        dlg.DefaultExt = ".sta";
+        dlg.Title = "Select Sta file";
+        if (dlg.ShowDialog() ?? false) {
+
+        } else {
+
+        }
+      } else {
+        file = args[1];
+      }
+
