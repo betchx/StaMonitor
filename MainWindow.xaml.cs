@@ -109,10 +109,19 @@ namespace StaMonitor
           Title = "Finished.";
         }
       }
+
+      // replace button_Click event handler to exit application
+      button.Click -= button_Click;
+      button.Click += close_Window;
+      button.Content = "Close";
+
       this.WindowState = WindowState.Normal;
       this.Activate();
     }
 
+    private void close_Window(object sender, RoutedEventArgs e) {
+      this.Close();
+    }
     /// <summary>
     /// Update the display of the last some lines of the sta file.
     /// </summary>
