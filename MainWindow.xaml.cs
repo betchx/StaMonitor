@@ -26,8 +26,12 @@ namespace StaMonitor
     public MainWindow() {
       InitializeComponent();
       var name = getTargetFileName();
-      if(name != "") 
+      if (name != "") {
         target = new FileInfo(name);
+        var inp = Path.ChangeExtension(name, ".inp");
+        var counter = new InpStepCounter(inp);
+        EndTime.Text = counter.TotalTime.ToString();
+      }
     }
 
     private void EndTime_TextChanged(object sender, TextChangedEventArgs e) {
