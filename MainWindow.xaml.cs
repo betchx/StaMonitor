@@ -29,11 +29,10 @@ namespace StaMonitor
     public int PoolingInterval { get; set; } = 100;
 
     private FileInfo target;
-    private Stack<string> lines;
+    private Stack<string> lines = new Stack<string>();
 
     public MainWindow() {
       InitializeComponent();
-      lines = new Stack<string>();
       var name = getTargetFileName();
       if(name != "") 
         target = new FileInfo(name);
