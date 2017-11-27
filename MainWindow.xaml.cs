@@ -85,7 +85,7 @@ namespace StaMonitor
                 var rate = 100.0 * double.Parse(time) / end_time;
                 Title = $"{time}/{end_time}({rate,4:0.0}%)[{delta}]";
               }
-              textBlock.Text = String.Join("\n", lines.Take(5).Reverse());
+              UpdateTail();
             }
 
             // Read Next line with waiting
@@ -97,11 +97,19 @@ namespace StaMonitor
             });
             lines.Push(line);
           }
+          UpdateTail();
           Title = "Finished.";
         }
       }
       this.WindowState = WindowState.Normal;
       this.Activate();
+    }
+
+    /// <summary>
+    /// Update the display of the last some lines of the sta file.
+    /// </summary>
+    private void UpdateTail() {
+      textBlock.Text = String.Join("\n", lines.Take(5).Reverse());
     }
 
 
