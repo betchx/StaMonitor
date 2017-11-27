@@ -15,6 +15,8 @@ namespace StaMonitor
   {
     public double _end_time = 0;
 
+    private bool _isRunning = false;
+
     /// <summary>
     ///  Interval of Pooling sta file (unit: milli second)
     /// </summary>
@@ -64,6 +66,11 @@ namespace StaMonitor
     private async void button_Click(object sender, RoutedEventArgs e) {
       this.WindowState = WindowState.Minimized;
 
+      // if already running, just minimize.
+      if (_isRunning)
+        return;
+
+      _isRunning = true;
       // Open with share control because the sta file was opened by abaqus process to write.
       using (var s = target.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete)) {
         using (var f = new StreamReader(s)) {
