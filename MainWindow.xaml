@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StaMonitor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="167.304" Width="524.456" Activated="Window_Activated">
+        Title="MainWindow" Height="167.304" Width="524.456" Activated="Window_Activated" FocusManager.FocusedElement="{Binding ElementName=EndTime}">
     <Grid>
-        <TextBox x:Name="EndTime" HorizontalAlignment="Left" Height="22" Margin="66,10,0,0" TextWrapping="Wrap" Text="1.0" VerticalAlignment="Top" Width="96" TextChanged="EndTime_TextChanged"/>
+        <TextBox x:Name="EndTime" HorizontalAlignment="Left" Height="22" Margin="66,10,0,0" TextWrapping="Wrap" Text="1.0" VerticalAlignment="Top" Width="96" TextChanged="EndTime_TextChanged" AutoWordSelection="True"/>
         <Label x:Name="label_EndTime" Content="EndTime" HorizontalAlignment="Left" Height="22" Margin="0,10,0,0" VerticalAlignment="Top" Width="61"/>
         <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="22" Margin="167,10,0,0" VerticalAlignment="Top" Width="86" IsDefault="True" Click="button_Click"/>
         <TextBlock x:Name="textBlock" Margin="10,75,0,0" TextWrapping="Wrap" Text="1&#10;2&#10;3&#10;4&#10;5" HorizontalAlignment="Left" Width="495" Height="60" VerticalAlignment="Top" FontFamily="MS Gothic" />
