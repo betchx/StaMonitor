@@ -13,7 +13,7 @@ namespace StaMonitor
   /// </summary>
   public partial class MainWindow : Window
   {
-    public double end_time { get; private set; }
+    public double _end_time = 0;
 
     /// <summary>
     ///  Interval of Pooling sta file (unit: milli second)
@@ -37,7 +37,7 @@ namespace StaMonitor
     private void EndTime_TextChanged(object sender, TextChangedEventArgs e) {
       double value;
       if(double.TryParse(EndTime.Text,out value)) {
-        end_time = value;
+        _end_time = value;
       }
     }
 
@@ -83,8 +83,8 @@ namespace StaMonitor
               var delta = arr[8];
               double time_value = 0.0;
               if (double.TryParse(time, out time_value)) {
-                var rate = 100.0 * double.Parse(time) / end_time;
-                Title = $"{time}/{end_time}({rate,4:0.0}%)[{delta}]";
+                var rate = 100.0 * double.Parse(time) / _end_time;
+                Title = $"{time}/{_end_time}({rate,4:0.0}%)[{delta}]";
               }
               UpdateTail();
             }
