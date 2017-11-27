@@ -22,6 +22,12 @@ namespace StaMonitor
   public partial class MainWindow : Window
   {
     public double end_time { get; private set; }
+
+    /// <summary>
+    ///  Interval of Pooling sta file (unit: milli second)
+    /// </summary>
+    public int PoolingInterval { get; set; } = 100;
+
     private FileInfo target;
     private Stack<string> lines;
 
@@ -91,7 +97,7 @@ namespace StaMonitor
             // Read Next line with waiting
             line = await Task.Run(() => {
               while (f.EndOfStream) {
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(PoolingInterval);
               }
               return f.ReadLine();
             });
