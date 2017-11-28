@@ -63,7 +63,11 @@ namespace StaMonitor
       }
     }
 
-    private async void button_Click(object sender, RoutedEventArgs e) {
+    private void button_Click(object sender, RoutedEventArgs e) {
+      StartWatching();
+    }
+
+    private async void StartWatching() {
       this.WindowState = WindowState.Minimized;
 
       // if already running, just minimize.
@@ -135,6 +139,12 @@ namespace StaMonitor
     private void Window_Activated(object sender, EventArgs e) {
       if (target == null) {
         this.Close();
+      }
+    }
+
+    private void Window_ContentRendered(object sender, EventArgs e) {
+      if(! String.IsNullOrWhiteSpace(EndTime.Text)) {
+        StartWatching();
       }
     }
   }
