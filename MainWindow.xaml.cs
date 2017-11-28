@@ -71,6 +71,8 @@ namespace StaMonitor
         return;
 
       _isRunning = true;
+      button.Content = "Watching";
+
       // Open with share control because the sta file was opened by abaqus process to write.
       using (var s = target.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete)) {
         using (var f = new StreamReader(s)) {
